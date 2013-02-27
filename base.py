@@ -123,7 +123,7 @@ orci. Etiam et condimentum lectus. Nullam mollis egestas lobortis. Donec lorem
 odio, ullamcorper at imperdiet ut, commodo a neque. Suspendisse tristique ligula
 nec tellus viverra rhoncus. Vivamus viverra, sapien at elementum congue, quam 
 nibh egestas nulla, vitae convallis diam est at."""
-    aliases = None
+    aliases = {}
 
 # def load_default_config():
 #     """Load the default config file"""

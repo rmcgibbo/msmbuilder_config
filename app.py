@@ -43,6 +43,17 @@ metric and/or clustering algorithm.
 Note that there are many distance metrics and clustering algorithms available
 Many of which have multiple options and parameters."""
 
+    # The configurable options are all "traits". They're declared here like
+    # class varaibles, but at run time they'll be instance variables on the class
+    # i.e. self.project_fn, self.stride, etc. The value of the instance variable
+    # is set by either (a) the default value, decalred here (b) a value specified
+    # in the config file, or (c) a value passed on the command line.
+    
+    # ALso, any object can subclass Configurable and get access to these. It's
+    # not just subcommands of the msmb3.py script that can receive configuration
+    # options. We can also set configurable values for objects like the metrics
+    # or "representations", or really anything else.
+    
     project_fn = Unicode(u'project.yaml', config=True,
         help='Path to project info file')
     stride = Int(1, config=True, help='Subsample by striding')
@@ -61,6 +72,11 @@ Many of which have multiple options and parameters."""
         metric should operate on cartesian coordinates, but other metrics require
         a coordinate system that removes the rotational symmetry, such as the space
         of backbone dihedral angles (Dihedral)''')
+        
+    # This line lets the App know that the user might want to configure the RMSD
+    # or PNorm classes as well. This is nice, because it means that when the
+    # --help-all flag is passed, the configurable traits for the RMSD and PNorm
+    # classes will also be shown to the user
     classes = [RMSD, PNorm]
     
     
