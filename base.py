@@ -1,13 +1,9 @@
-import os, sys
+import os
 from IPython.config.application import Application
 from IPython.utils.traitlets import Bool
-from IPython.config.loader import (Config, PyFileConfigLoader,
-    ConfigFileNotFound)
-from IPython.utils.text import wrap_paragraphs, indent, dedent
+from IPython.config.loader import ConfigFileNotFound
+from IPython.utils.text import indent, dedent
 
-
-class ConfigurationError(Exception):
-    pass
 
 class MSMBuilderApp(Application):
     #######################################################################
@@ -21,34 +17,45 @@ class MSMBuilderApp(Application):
     #######################################################################
     # END options that need to be overridden in every subclass (subapp)
     #######################################################################
+
+    # where to look for msmbuilder config files
+    # TODO: change to a more robust solution that looks in current directory,
+    # home directory, etc.
     config_file_paths = ['.']
     config_file_name = 'msmbuilder_config.py'
-    
+
     display_banner = Bool(True, config=True,
-        help="Whether to display a banner upon starting MSMBuilder."
-    )
-        
-    def print_description(self):
-        print self.short_description
-        print self.long_description
-        print ''
-        
+        help="Whether to display a banner upon starting MSMBuilder.")
+
     def initialize(self, argv=None):
+        """Do the first steps to configure the application, including
+        finding and loading the configuration file"""
         super(MSMBuilderApp, self).initialize(argv)
         self.load_config_file()
         if self.display_banner:
-            print 'DRAWING BANNER'
+            print 'DRAWING MSMBUILDER BANNER'
+            print 'PLEASE CITE US?'
 
     def start(self):
+        """Start the application's main loop.
+
+        This will be overridden in subclasses"""
         if self.subapp is not None:
             self.subapp.update_config(self.config)
             return self.subapp.start()
-            
+
+    def print_description(self):
+        "Print the application description"
+        print self.short_description
+        print self.long_description
+        print ''
 
     def print_subcommands(self):
+        """Print the list of subcommands under this application"""
+
         if not self.subcommands:
             return
-    
+
         lines = ["Subcommands"]
         lines.append('-'*len(lines[0]))
         for subc, (cls, help) in self.subcommands.iteritems():
@@ -56,10 +63,9 @@ class MSMBuilderApp(Application):
             if help:
                 lines.append(indent(dedent(help.strip())))
         lines.append('')
-        
+
         print os.linesep.join(lines)
-    
-    
+
     def load_config_file(self, suppress_errors=True):
         """Load the config file.
 
@@ -67,7 +73,8 @@ class MSMBuilderApp(Application):
         printed on screen. For testing, the suppress_errors option is set
         to False, so errors will make tests fail.
         """
-        self.log.debug("Searching path %s for config files", self.config_file_paths)
+        self.log.debug("Searching path %s for config files",
+                       self.config_file_paths)
         base_config = 'msmbuilder_config.py'
         self.log.debug("Attempting to load config file: %s" %
                        base_config)
@@ -110,27 +117,18 @@ class MSMBuilderApp(Application):
 class RootApplication(MSMBuilderApp):
     name = 'msmb'
     path = 'base.MSMBuilderApp'
-    short_description = ('MSMBuilder: Extensible software for building Markov'
-        ' State Models for Biomolecular Conformational Dynamics')
+    short_description = ('MSMBuilder: Extensible software for building Markov '
+                         'State Models for Biomolecular Conformational '
+                         'Dynamics')
     long_description = """
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed nibh ut orci
 suscipit scelerisque. Sed ligula augue, blandit ac eleifend eleifend, dapibus
 ac sapien. Duis eu tortor ac erat porta vulputate. Phasellus ac nisl quis magna
-eleifend tempor feugiat vehicula odio. Praesent porta, nunc vel eleifend 
-elementum, sem justo dapibus massa, sed ultrices sapien felis nec urna. Praesent
-et congue orci. Quisque diam turpis, volutpat vitae viverra at, sodales eget 
-orci. Etiam et condimentum lectus. Nullam mollis egestas lobortis. Donec lorem 
-odio, ullamcorper at imperdiet ut, commodo a neque. Suspendisse tristique ligula
-nec tellus viverra rhoncus. Vivamus viverra, sapien at elementum congue, quam 
-nibh egestas nulla, vitae convallis diam est at."""
+eleifend tempor feugiat vehicula odio. Praesent porta, nunc vel eleifend
+elementum, sem justo dapibus massa, sed ultrices sapien felis nec urna.
+Praesent et congue orci. Quisque diam turpis, volutpat vitae viverra at,
+sodales eget orci. Etiam et condimentum lectus. Nullam mollis egestas lobortis.
+Donec lorem odio, ullamcorper at imperdiet ut, commodo a neque. Suspendisse
+tristique  ligula nec tellus viverra rhoncus. Vivamus viverra, sapien at
+elementum congue, quam nibh egestas nulla, vitae convallis diam est at."""
     aliases = {}
-
-# def load_default_config():
-#     """Load the default config file"""
-#     cl = PyFileConfigLoader(default_config_file_name, '.')
-#     try:
-#         config = cl.load_config()
-#     except ConfigFileNotFound:
-#         # no config found
-#         config = Config()
-#     return config
