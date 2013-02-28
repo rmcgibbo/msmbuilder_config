@@ -105,7 +105,7 @@ elementum congue, quam nibh egestas nulla, vitae convallis diam est at."""
 
         This will be overridden in subclasses"""
         if self.subapp is not None:
-            self.subapp.update_config(self.config)
+            # self.subapp.update_config(self.config)
             return self.subapp.start()
         else:
             # if they don't choose a subcommand, display the help message
