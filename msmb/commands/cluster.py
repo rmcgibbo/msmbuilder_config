@@ -73,3 +73,4 @@ Many of which have multiple options and parameters."""
         print 'Starting to cluster'
         print self.project_fn
         print self.representation
+        print self.config
