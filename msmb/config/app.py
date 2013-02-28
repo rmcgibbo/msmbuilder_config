@@ -10,7 +10,7 @@ import os
 # ipython imports
 from IPython.config.application import Application
 from IPython.utils.traitlets import Bool
-from IPython.utils.text import indent, dedent
+from IPython.utils.text import indent, dedent, wrap_paragraphs, marquee
 from IPython.config.loader import ConfigFileNotFound
 
 #-----------------------------------------------------------------------------
@@ -43,10 +43,14 @@ class MSMBuilderApp(Application):
 
     def print_description(self):
         "Print the application description"
-        print(self.short_description)
-        print('='*len(self.short_description) + os.linesep)
-        print(self.long_description)
-        print('')
+        lines = []
+        lines.append(self.short_description)
+        lines.append('='*len(self.short_description))
+        lines.append('')
+        for l in wrap_paragraphs(self.long_description):
+            lines.append(l)
+            lines.append('')
+        print(os.linesep.join(lines))
 
     def initialize(self, argv=None):
         """Do the first steps to configure the application, including
@@ -55,9 +59,9 @@ class MSMBuilderApp(Application):
         # the command line options override the config file options
         self.load_config_file()
         super(MSMBuilderApp, self).initialize(argv)
-        if self.display_banner:
-            print('DRAWING MSMBUILDER BANNER')
-            print('PLEASE CITE US?')
+        #if self.display_banner:
+        #    print('DRAWING MSMBUILDER BANNER')
+        #    print('PLEASE CITE US?')
 
     def load_config_file(self):
         try:
@@ -121,6 +125,12 @@ elementum congue, quam nibh egestas nulla, vitae convallis diam est at."""
         else:
             # if they don't choose a subcommand, display the help message
             self.parse_command_line('--help')
+    
+    def initialize(self, argv=None):
+        super(RootApplication, self).initialize(argv)
+        if self.display_banner:
+            print('DRAWING MSMBUILDER BANNER')
+            print('PLEASE CITE US?')
 
 #-----------------------------------------------------------------------------
 # Utility functions
