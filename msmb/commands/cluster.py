@@ -1,5 +1,6 @@
 from msmb.config.app import MSMBuilderApp
-from msmb.metrics import RMSD, PNorm
+from msmb.metrics.rmsd import RMSD
+from msmb.metrics.pnorm import PNorm
 from IPython.utils.traitlets import Unicode, Int, Enum
 
 class Cluster(MSMBuilderApp):
@@ -64,4 +65,11 @@ Many of which have multiple options and parameters."""
         self.log.info('Starting up Cluster')
         if self.metric_type == 'RMSD':
             metric = RMSD(config=self.config)
-            metric.prepare_trajectory()
+        elif self.metric_type == 'PNorm':
+            metric = PNorm(config=self.config)
+        else:
+            raise Exception()
+            
+        print 'Starting to cluster'
+        print self.project_fn
+        print self.representation

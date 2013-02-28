@@ -13,6 +13,9 @@ from IPython.config.application import Application
 from IPython.utils.traitlets import Bool
 from IPython.utils.text import indent, dedent
 
+class ConfigurationError(Exception):
+    pass
+
 class MSMBuilderApp(Application):
     #######################################################################
     # BEGIN options that need to be overridden in every subclass (subapp)

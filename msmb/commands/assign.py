@@ -1,5 +1,6 @@
 from msmb.config.app import MSMBuilderApp
-from msmb.metrics import RMSD, PNorm
+from msmb.metrics.rmsd import RMSD
+from msmb.metrics.pnorm import PNorm
 
 
 class Assign(MSMBuilderApp):
@@ -24,4 +25,4 @@ to whichever metric you choose) from each frame to to the medoid of the
 microstate it is assigned to."""
 
     def start(self):
-        print 'STARTING Assign!'
+        print 'starting Assign!'
