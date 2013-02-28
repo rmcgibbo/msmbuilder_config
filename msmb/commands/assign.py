@@ -25,4 +25,4 @@ to whichever metric you choose) from each frame to to the medoid of the
 microstate it is assigned to."""
 
     def start(self):
-        print 'starting Assign!'
+        print 'starting assign -- calling library function'

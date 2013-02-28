@@ -70,7 +70,7 @@ Many of which have multiple options and parameters."""
         else:
             raise Exception()
             
-        print 'Starting to cluster'
+        print 'Starting to cluster -- calling library function'
         print self.project_fn
         print self.representation
         print self.config

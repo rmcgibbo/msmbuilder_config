@@ -6,15 +6,21 @@
 from __future__ import print_function
 # stdlib imports
 import os
-import sys
 
 # ipython imports
 from IPython.config.application import Application
 from IPython.utils.traitlets import Bool
 from IPython.utils.text import indent, dedent
+from IPython.config.loader import ConfigFileNotFound
+
+#-----------------------------------------------------------------------------
+# Classes
+#-----------------------------------------------------------------------------
+
 
 class ConfigurationError(Exception):
     pass
+
 
 class MSMBuilderApp(Application):
     #######################################################################
@@ -29,25 +35,11 @@ class MSMBuilderApp(Application):
     # END options that need to be overridden in every subclass (subapp)
     #######################################################################
 
-    # where to look for msmbuilder config files
-    # TODO: change to a more robust solution that looks in current directory,
-    # home directory, etc.
-    config_file_paths = ['.']
     config_file_name = 'msmbuilder_config.py'
     option_description = u''
 
-
     display_banner = Bool(True, config=True,
         help="Whether to display a banner upon starting MSMBuilder.")
-
-    def initialize(self, argv=None):
-        """Do the first steps to configure the application, including
-        finding and loading the configuration file"""
-        super(MSMBuilderApp, self).initialize(argv)
-        self.load_config_file(self.config_file_name, self.config_file_paths)
-        if self.display_banner:
-            print('DRAWING MSMBUILDER BANNER')
-            print('PLEASE CITE US?')
 
     def print_description(self):
         "Print the application description"
@@ -55,6 +47,26 @@ class MSMBuilderApp(Application):
         print('='*len(self.short_description) + os.linesep)
         print(self.long_description)
         print('')
+
+    def initialize(self, argv=None):
+        """Do the first steps to configure the application, including
+        finding and loading the configuration file"""
+        # load the config file before parsing argv so that
+        # the command line options override the config file options
+        self.load_config_file()
+        super(MSMBuilderApp, self).initialize(argv)
+        if self.display_banner:
+            print('DRAWING MSMBUILDER BANNER')
+            print('PLEASE CITE US?')
+
+    def load_config_file(self):
+        try:
+            super(MSMBuilderApp, self).load_config_file(self.config_file_name,
+                                                        config_file_paths())
+            self.log.info('Config file loaded.')
+        except ConfigFileNotFound:
+            self.log.warning('No config file was found. I searched in %s' %
+                ', '.join(config_file_paths()))
 
     def print_subcommands(self):
         """Print the list of subcommands under this application"""
@@ -105,12 +117,14 @@ elementum congue, quam nibh egestas nulla, vitae convallis diam est at."""
 
         This will be overridden in subclasses"""
         if self.subapp is not None:
-            # self.subapp.update_config(self.config)
             return self.subapp.start()
         else:
             # if they don't choose a subcommand, display the help message
             self.parse_command_line('--help')
 
+#-----------------------------------------------------------------------------
+# Utility functions
+#-----------------------------------------------------------------------------
 
 def collect_subcommands():
     """Collect all of the subclasses of `MSMBuilderApp` that have been
@@ -137,3 +151,10 @@ def collect_subcommands():
             subcommands[subclass.name] = (subclass.path,
                                           subclass.short_description)
     return subcommands
+
+
+def config_file_paths():
+    """Get a list of paths where the msmbuilder_config.py file might be found
+    """
+
+    return ['.', os.path.expanduser('~/.msmbuilder')]
