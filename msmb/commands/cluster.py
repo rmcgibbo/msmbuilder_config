@@ -4,9 +4,17 @@ from msmb.metrics.pnorm import PNorm
 from IPython.utils.traitlets import Unicode, Int, Enum
 
 class Cluster(MSMBuilderApp):
+    # the "name" field will be how this app will be called from the command
+    # line. For example, this app will be accessible as "msmb cluster ..."
     name = 'cluster'
     path = 'msmb.commands.cluster.Cluster'
+    
+    # short_description will be displayed when listing all of the commands,
+    # and should be able to fit onto a single line
     short_description = 'Cluster trajectories into microstates.'
+    
+    # the long_description will be displayed when the user asks for help on
+    # specifically *this* app
     long_description = """
 Output: Assignments.h5, and other files depending on your choice of distance
 metric and/or clustering algorithm.
@@ -61,6 +69,7 @@ Many of which have multiple options and parameters."""
         metric_type='Cluster.metric_type',
         representation='Cluster.representation')
 
+    # start is the "main" method for the app. 
     def start(self):
         self.log.info('Starting up Cluster')
         if self.metric_type == 'RMSD':
