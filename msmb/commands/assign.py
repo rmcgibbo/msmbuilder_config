@@ -24,5 +24,8 @@ array of real numbers of the same dimension containing the distance (according
 to whichever metric you choose) from each frame to to the medoid of the
 microstate it is assigned to."""
 
+    reference = """A. B. Author, B. C. Author and C. D. Author, Title of
+    our awesome paper. Chem. Theory Comput. 7, 3412 (2013)"""
+
     def start(self):
         print 'starting assign -- calling library function'

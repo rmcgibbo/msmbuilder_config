@@ -22,6 +22,9 @@ metric and/or clustering algorithm.
 Note that there are many distance metrics and clustering algorithms available
 Many of which have multiple options and parameters."""
 
+    reference = """A. B. Author, B. C. Author and C. D. Author, Title of
+    our awesome paper. Chem. Theory Comput. 7, 3412 (2013)"""
+
     # The configurable options are all "traits". They're declared here like
     # class varaibles, but at run time they'll be instance variables on the
     # class i.e. self.project_fn, self.stride, etc. The value of the instance

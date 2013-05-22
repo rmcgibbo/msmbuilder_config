@@ -30,6 +30,7 @@ class MSMBuilderApp(Application):
     path = None
     short_description = None
     long_description = None
+    reference = None
     subcommands = None
     #######################################################################
     # END options that need to be overridden in every subclass (subapp)
@@ -47,9 +48,18 @@ class MSMBuilderApp(Application):
         lines.append(self.short_description)
         lines.append('='*len(self.short_description))
         lines.append('')
-        for l in wrap_paragraphs(self.long_description):
-            lines.append(l)
-            lines.append('')
+
+        if self.long_description:
+            for l in wrap_paragraphs(self.long_description):
+                lines.append(l)
+                lines.append('')
+
+        if self.reference:
+            lines.append('Reference\n---------')
+            for l in wrap_paragraphs(self.reference):
+                lines.append(l)
+                lines.append('')
+
         print(os.linesep.join(lines))
 
     def initialize(self, argv=None):
